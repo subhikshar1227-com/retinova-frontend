@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RetiNova - CVD Risk Prediction</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#1763cf",
+        "background-dark": "#111821",
+        "surface-dark": "#1e293b",
+        "border-dark": "#334155",
+        "text-secondary": "#94a3b8",
+      },
+      fontFamily: { display: "Manrope" },
+    }
+  }
+};
+</script>
+</head>
+
+<body class="bg-background-dark text-white font-display">
+
+<header class="border-b border-border-dark px-6 py-3">
+  <h2 class="text-xl font-bold text-primary">RetiNova</h2>
+</header>
+
+<main class="max-w-[1400px] mx-auto p-6 flex flex-col gap-8">
+
+<!-- HEADER -->
+<div>
+  <h1 class="text-primary text-4xl font-semibold">New Analysis Session</h1>
+  <p class="text-text-secondary mt-1">
+    Upload high-resolution fundus imagery for automated AI evaluation.
+  </p>
+</div>
+
+<!-- 🔙 Back to Dashboard -->
+<button
+  id="backToDashboardBtn"
+  class="mb-6 flex items-center gap-2 text-sm font-semibold text-primary hover:text-white transition"
+>
+  <span class="material-symbols-outlined">arrow_back</span>
+  Back to Dashboard
+</button>
+
+<!-- 🔹 CVD HEADING -->
+<h2 class="text-center text-2xl font-bold text-primary mt-6">
+  CVD Risk Prediction
+</h2>
+
+<!-- ✅ OS / OD GRID (PASTE THIS) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+
+  <!-- OS CARD -->
+  <div id="osCard"
+    class="rounded-2xl bg-surface-dark border border-border-dark overflow-hidden transition hover:border-primary/40">
+    
+    <div class="px-6 py-3 border-b border-border-dark flex justify-between">
+      <span class="font-bold">LEFT EYE (OS)</span>
+      <span class="material-symbols-outlined text-text-secondary">visibility</span>
+    </div>
+
+    <div class="p-6 flex flex-col items-center gap-3 min-h-[220px]">
+      <input id="osInput" type="file" accept="image/*" class="hidden" />
+
+      <button id="osBtn"
+        class="px-6 py-2 rounded-full border border-border-dark bg-surface-dark hover:bg-primary hover:text-white">
+        Select OS Image
+      </button>
+
+      <p id="osStatus" class="text-text-secondary text-sm">
+        No file selected
+      </p>
+    </div>
+  </div>
+
+  <!-- OD CARD -->
+  <div id="odCard"
+    class="rounded-2xl bg-surface-dark border border-border-dark overflow-hidden transition hover:border-rose-400/40">
+
+    <div class="px-6 py-3 border-b border-border-dark flex justify-between">
+      <span class="font-bold">RIGHT EYE (OD)</span>
+      <span class="material-symbols-outlined text-text-secondary">visibility</span>
+    </div>
+
+    <div class="p-6 flex flex-col items-center gap-3 min-h-[220px]">
+      <input id="odInput" type="file" accept="image/*" class="hidden" />
+
+      <button id="odBtn"
+        class="px-6 py-2 rounded-full border border-border-dark bg-surface-dark hover:bg-rose-500 hover:text-white">
+        Select OD Image
+      </button>
+
+      <p id="odStatus" class="text-text-secondary text-sm">
+        No file selected
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ✅ RUN AI ANALYSIS (STAYS OUTSIDE) -->
+<div class="flex justify-center mt-6">
+  <button id="uploadBtn"
+    class="w-full max-w-md h-12 rounded-full bg-primary font-bold">
+    Run AI Analysis
+  </button>
+</div>
+
+
+<!-- CLINICAL INPUTS -->
+<div id="clinicalBox"
+  class="hidden rounded-2xl bg-surface-dark border border-border-dark p-6 max-w-lg">
+
+  <h2 class="text-xl font-bold text-primary mb-4">Clinical Inputs</h2>
+
+  <div class="grid grid-cols-2 gap-3">
+    <input id="age" type="number" placeholder="Age" class="p-2 rounded bg-background-dark">
+    <select id="sex" class="p-2 rounded bg-background-dark">
+      <option value="0">Female</option>
+      <option value="1">Male</option>
+    </select>
+
+    <select id="smoker" class="p-2 rounded bg-background-dark">
+      <option value="false">Non-smoker</option>
+      <option value="true">Smoker</option>
+    </select>
+
+    <select id="diabetes" class="p-2 rounded bg-background-dark">
+      <option value="false">No Diabetes</option>
+      <option value="true">Diabetes</option>
+    </select>
+
+    <input id="sbp" type="number" placeholder="Systolic BP" class="p-2 rounded bg-background-dark">
+
+    <select id="bp_meds" class="p-2 rounded bg-background-dark">
+      <option value="false">No BP meds</option>
+      <option value="true">On BP meds</option>
+    </select>
+  </div>
+
+  <button id="runCvdBtn"
+    class="mt-4 w-full h-11 rounded-full bg-primary font-bold">
+    Run Risk Prediction
+  </button>
+</div>
+
+<!-- RESULT -->
+<!-- RESULT -->
+<!-- RESULT -->
+<div id="resultBox"
+  class="hidden rounded-2xl bg-surface-dark border border-border-dark p-6 max-w-lg">
+
+  <h2 class="text-xl font-bold text-primary mb-3">Result</h2>
+
+  <p><b>Image ID:</b> <span id="resImg"></span></p>
+
+  <p><b>Base ML Risk:</b> <span id="resBase"></span></p>
+  <p><b>PRS Proxy:</b> <span id="resPrs"></span></p>
+  <p><b>Final Adjusted Risk:</b> <span id="resFinal"></span></p>
+  <p><b>Risk Delta:</b> <span id="resDelta"></span></p>
+
+  <div class="mt-3">
+    <b>Clinical Explanation:</b>
+    <p id="resExplain" class="text-text-secondary mt-1"></p>
+  </div>
+</div>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ================= URLs ================= */
+  const CVD_UPLOAD_URL = "https://retinova-cvd-q7kx.onrender.com/cvd/upload";
+  const CVD_RUN_URL    = "https://retinova-cvd-q7kx.onrender.com/cvd/run";
+
+  /* ================= STATE ================= */
+  let osFile = null;
+  let odFile = null;
+  let imageId = null;
+
+  const userId = localStorage.getItem("user_id");
+  const userEmail = localStorage.getItem("user_email");
+
+  if (!userId || !userEmail) {
+    window.location.href = "/login.html";
+  }
+
+  /* ================= DOM ================= */
+  const osInput = document.getElementById("osInput");
+  const odInput = document.getElementById("odInput");
+  const osBtn = document.getElementById("osBtn");
+  const odBtn = document.getElementById("odBtn");
+  const osStatus = document.getElementById("osStatus");
+  const odStatus = document.getElementById("odStatus");
+
+  const uploadBtn = document.getElementById("uploadBtn");
+  const clinicalBox = document.getElementById("clinicalBox");
+  const runCvdBtn = document.getElementById("runCvdBtn");
+
+  const resultBox = document.getElementById("resultBox");
+  const resImg = document.getElementById("resImg");
+  const resBase = document.getElementById("resBase");
+  const resPrs = document.getElementById("resPrs");
+  const resFinal = document.getElementById("resFinal");
+  const resDelta = document.getElementById("resDelta");
+  const resExplain = document.getElementById("resExplain");
+
+  /* ================= FILE SELECT ================= */
+  osBtn.addEventListener("click", () => osInput.click());
+  odBtn.addEventListener("click", () => odInput.click());
+
+  osInput.addEventListener("change", () => {
+    osFile = osInput.files[0];
+    osStatus.textContent = osFile ? osFile.name : "No file selected";
+  });
+
+  odInput.addEventListener("change", () => {
+    odFile = odInput.files[0];
+    odStatus.textContent = odFile ? odFile.name : "No file selected";
+  });
+
+  /* ================= UPLOAD ================= */
+  uploadBtn.onclick = async () => {
+    if (!osFile && !odFile) {
+      alert("Upload at least one image (OS or OD)");
+      return;
+    }
+
+    uploadBtn.textContent = "Uploading…";
+    uploadBtn.disabled = true;
+
+    const form = new FormData();
+    form.append("file", osFile || odFile);
+    form.append("user_id", userId);
+    form.append("user_email", userEmail);
+
+    try {
+      const res = await fetch(CVD_UPLOAD_URL, {
+        method: "POST",
+        body: form
+      });
+
+      const data = await res.json();
+      imageId = data.image_id;
+
+      clinicalBox.classList.remove("hidden");
+
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed");
+    }
+
+    uploadBtn.textContent = "Run AI Analysis";
+    uploadBtn.disabled = false;
+  };
+
+  /* ================= RUN CVD ================= */
+  runCvdBtn.onclick = async () => {
+    if (!imageId) {
+      alert("Upload image first");
+      return;
+    }
+
+    runCvdBtn.textContent = "Running…";
+    runCvdBtn.disabled = true;
+
+    try {
+      const toBool = (v) => v === "true";
+
+      const form = new FormData();
+      form.append("image_id", imageId);
+      form.append("user_id", userId);
+      form.append("age", age.value);
+      form.append("sex", sex.value);
+      form.append("smoker", toBool(smoker.value));
+      form.append("diabetes", toBool(diabetes.value));
+      form.append("sbp", sbp.value);
+      form.append("bp_meds", toBool(bp_meds.value));
+
+      const res = await fetch(CVD_RUN_URL, {
+        method: "POST",
+        body: form
+      });
+
+      const data = await res.json();
+
+      resImg.textContent = data.image_id;
+      resBase.textContent = data.result.base_ml_risk;
+      resPrs.textContent = data.result.prs_proxy;
+      resFinal.textContent = data.result.final_adjusted_risk;
+      resDelta.textContent = data.result.risk_delta;
+      resExplain.textContent = data.result.clinical_explanations.join(" ");
+
+      resultBox.classList.remove("hidden");
+
+    } catch (err) {
+      console.error(err);
+      alert("Risk computation failed");
+    }
+
+    runCvdBtn.textContent = "Run Risk Prediction";
+    runCvdBtn.disabled = false;
+  };
+
+});
+
+document.getElementById("backToDashboardBtn").onclick = () => {
+  window.location.href = "../clinician_dashboard/code.html";
+};
+</script>

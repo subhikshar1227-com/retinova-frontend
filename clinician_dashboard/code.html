@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetiNova Dashboard</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1763cf",
+            "background-dark": "#111821",
+            "surface-dark": "#1e293b",
+            "border-dark": "#334155",
+            "text-secondary": "#94a3b8",
+          },
+          fontFamily: {
+            display: "Manrope"
+          },
+          borderRadius: {
+            xl: "0.75rem",
+            "2xl": "1rem"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-background-dark text-white font-display min-h-screen">
+
+<!-- ================= HEADER ================= -->
+<header class="border-b border-border-dark px-8 py-5 flex justify-between items-center">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-primary text-3xl">ophthalmology</span>
+    <h1 class="text-xl font-bold">RetiNova</h1>
+  </div>
+
+  <div class="text-sm text-text-secondary">
+    Clinician Dashboard
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="max-w-[1000px] mx-auto px-6 py-10">
+
+  <!-- Welcome -->
+  <div class="mb-10">
+    <h2 class="text-3xl font-semibold text-primary">Welcome</h2>
+    <p class="text-text-secondary mt-1">
+      Choose the type of analysis to begin a new scan session.
+    </p>
+  </div>
+
+  <!-- ACTION CARDS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- 7 Disease Card -->
+    <button
+      id="sevenBtn"
+      class="group rounded-2xl bg-surface-dark border border-border-dark p-8 text-left hover:border-primary hover:bg-primary/10 transition">
+
+      <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-primary text-3xl">visibility</span>
+        <h3 class="text-xl font-bold">RetinaOS – 7 Disease Analysis</h3>
+      </div>
+
+      <p class="text-text-secondary">
+        Upload fundus images to detect 7 retinal diseases using AI-based analysis.
+      </p>
+
+      <div class="mt-6 flex items-center gap-2 text-primary font-semibold">
+        Start Analysis
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </button>
+
+    <!-- CVD Card -->
+    <button
+      id="cvdBtn"
+      class="group rounded-2xl bg-surface-dark border border-border-dark p-8 text-left hover:border-primary hover:bg-primary/10 transition">
+
+      <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-primary text-3xl">monitor_heart</span>
+        <h3 class="text-xl font-bold">RetinaOS – CVD Risk Prediction</h3>
+      </div>
+
+      <p class="text-text-secondary">
+        Predict cardiovascular risk using retinal imaging combined with clinical inputs.
+      </p>
+
+      <div class="mt-6 flex items-center gap-2 text-primary font-semibold">
+        Start Prediction
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </button>
+
+  </div>
+
+</main>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+  // 🔐 Auth Guard (FIXED)
+  const userId = localStorage.getItem("user_id");
+  const userEmail = localStorage.getItem("user_email");
+
+  if (!userId || !userEmail) {
+    window.location.href = "../login_page/code.html";
+  }
+
+  // 🚀 Page navigation
+  document.getElementById("sevenBtn").onclick = () => {
+    window.location.href = "../upload_&_results/code_7diseases.html";
+  };
+
+  document.getElementById("cvdBtn").onclick = () => {
+    window.location.href = "../upload_&_results/code_cvd.html";
+  };
+</script>
+
+</body>
+</html>

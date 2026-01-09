@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RetiNova - Upload & Analysis</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        primary: "#1763cf",
+        "background-dark": "#111821",
+        "surface-dark": "#1e293b",
+        "border-dark": "#334155",
+        "text-secondary": "#94a3b8",
+      },
+      fontFamily: { display: "Manrope" },
+      borderRadius: { "2xl": "1rem" }
+    }
+  }
+};
+</script>
+</head>
+
+<body class="bg-background-dark text-white font-display">
+
+<!-- ================= NAVBAR ================= -->
+<header class="flex-none border-b border-border-dark px-6 py-3 bg-background-dark/80 backdrop-blur-md">
+  <div class="flex items-center justify-between w-full">
+
+    <div class="flex items-center gap-3">
+      <div class="size-8 text-primary">
+        <svg fill="currentColor" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="20"></circle>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold">RetiNova</h2>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button class="rounded-full size-10 bg-surface-dark border border-border-dark hover:bg-border-dark">
+        <span class="material-symbols-outlined text-[22px]">notifications</span>
+      </button>
+
+      <button class="rounded-full size-10 bg-surface-dark border border-border-dark hover:bg-border-dark">
+        <span class="material-symbols-outlined text-[22px]">settings</span>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <div class="text-right hidden sm:block">
+          <p class="text-sm font-bold">User</p>
+          <p class="text-xs text-text-secondary">Ophthalmology</p>
+        </div>
+        <div class="size-10 rounded-full bg-slate-500 ring-2 ring-border-dark"></div>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<main class="flex-1 overflow-y-auto">
+  <div class="max-w-[1400px] mx-auto p-6 lg:p-10 flex flex-col gap-8">
+
+    <!-- ============== BREADCRUMB ================= -->
+    <div>
+      <div class="flex items-center gap-2">
+        <a class="text-text-secondary text-sm flex gap-1" href="#">
+          <span class="material-symbols-outlined text-[18px]">folder_shared</span>
+          Patients
+        </a>
+        <span class="text-border-dark text-sm">/</span>
+        <span class="text-sm font-medium">New Scan</span>
+      </div>
+
+      <h1 class="text-primary text-4xl font-semibold mt-2">
+        New Analysis Session
+      </h1>
+
+      <p class="text-text-secondary mt-1">
+        Upload high-resolution fundus imagery for automated AI evaluation.
+      </p>
+    </div>
+
+    <!-- 🔙 Back to Dashboard -->
+<button
+  id="backToDashboardBtn"
+  class="mb-6 flex items-center gap-2 text-sm font-semibold text-primary hover:text-white transition"
+>
+  <span class="material-symbols-outlined">arrow_back</span>
+  Back to Dashboard
+</button>
+
+    <!-- ============== GRID ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- OS CARD -->
+      <div id="osCard"
+        class="rounded-2xl bg-surface-dark border border-border-dark overflow-hidden transition hover:border-primary/40">
+        
+        <div class="px-6 py-3 border-b border-border-dark flex justify-between">
+          <span class="font-bold">LEFT EYE (OS)</span>
+          <span class="material-symbols-outlined text-text-secondary">visibility</span>
+        </div>
+
+        <div class="p-6 flex flex-col items-center gap-3 min-h-[220px]">
+
+          <input id="osInput" type="file" accept="image/*" class="hidden" />
+
+          <button id="osBtn"
+            class="px-6 py-2 rounded-full border border-border-dark bg-surface-dark hover:bg-primary hover:text-white">
+            Select OS Image
+          </button>
+
+          <p id="osStatus" class="text-text-secondary text-sm">
+            No file selected
+          </p>
+
+        </div>
+      </div>
+
+      <!-- OD CARD -->
+      <div id="odCard"
+        class="rounded-2xl bg-surface-dark border border-border-dark overflow-hidden transition hover:border-rose-400/40">
+
+        <div class="px-6 py-3 border-b border-border-dark flex justify-between">
+          <span class="font-bold">RIGHT EYE (OD)</span>
+          <span class="material-symbols-outlined text-text-secondary">visibility</span>
+        </div>
+
+        <div class="p-6 flex flex-col items-center gap-3 min-h-[220px]">
+
+          <input id="odInput" type="file" accept="image/*" class="hidden" />
+
+          <button id="odBtn"
+            class="px-6 py-2 rounded-full border border-border-dark bg-surface-dark hover:bg-rose-500 hover:text-white">
+            Select OD Image
+          </button>
+
+          <p id="odStatus" class="text-text-secondary text-sm">
+            No file selected
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== WARNING ===== -->
+    <p id="warnBox"
+      class="hidden p-3 rounded-xl bg-amber-900/40 border border-amber-400 text-amber-200">
+      Upload only ONE image — OS or OD (not both).
+    </p>
+
+    <!-- ===== RUN BUTTON ===== -->
+    <div class="flex justify-center mt-2">
+      <button id="runBtn"
+        class="w-full max-w-md h-12 rounded-full bg-primary hover:bg-blue-600 font-bold">
+        Run AI Analysis
+      </button>
+    </div>
+
+    <!-- ===== RESULT PANEL ===== -->
+    <div id="resultBox"
+      class="hidden rounded-2xl bg-surface-dark border border-border-dark p-6">
+
+      <h2 class="text-xl font-bold text-primary mb-3">
+        AI Prediction Summary
+      </h2>
+
+      <p><b>Base Condition:</b> <span id="resLabel"></span></p>
+      <p><b>Base Confidence:</b> <span id="resConf"></span></p>
+      <p><b>Image ID:</b> <span id="resImg"></span></p>
+
+      <div class="flex gap-3 mt-4">
+        <a id="gradBtn" target="_blank"
+          class="px-4 py-2 rounded-full bg-primary">
+          View Grad-CAM
+        </a>
+
+        <a id="heatBtn" target="_blank"
+          class="px-4 py-2 rounded-full border border-border-dark">
+          View Heatmap
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== MCQ PANEL ===== -->
+    <div id="mcqPanel"
+      class="hidden rounded-2xl bg-surface-dark border border-border-dark p-6">
+
+      <h2 class="text-xl font-bold text-primary mb-3">
+        Risk Adjustment Questionnaire
+      </h2>
+
+      <button id="loadMcqBtn"
+        class="px-5 py-2 rounded-full bg-primary font-bold">
+        Load MCQ Questions
+      </button>
+
+      <div id="mcqBox" class="hidden mt-4 flex flex-col gap-3"></div>
+
+      <button id="submitMcqBtn"
+        class="hidden mt-4 px-5 py-2 rounded-full border border-border-dark">
+        Submit Answers
+      </button>
+
+      <div id="finalConfWrap" class="hidden mt-4">
+        <p><b>Final Confidence:</b>
+          <span id="finalConfVal"></span>
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- ================== SCRIPT ================== -->
+<script>
+const API_UPLOAD = "https://retinova-backend-1.onrender.com/upload-and-process";
+
+/* LOCAL MCQ API (change later after deploy) */
+const MCQ_BASE = "https://retinova-backend-1.onrender.com";
+const MCQ_GET = `${MCQ_BASE}/mcq_questions`;
+const MCQ_SUBMIT = `${MCQ_BASE}/mcq_submit`;
+
+let osFile = null;
+let odFile = null;
+let currentImageId = null;
+//canonical identity keys 
+const userId = localStorage.getItem("user_id");
+const userEmail = localStorage.getItem("user_email");
+
+if (!userId || !userEmail) {
+  window.location.href = "/login.html";
+}
+
+/* ---------- File Selection ---------- */
+osBtn.onclick = () => osInput.click();
+odBtn.onclick = () => odInput.click();
+
+osInput.onchange = () => {
+  osFile = osInput.files[0];
+  osStatus.textContent = osFile ? `Selected: ${osFile.name}` : "No file selected";
+  osCard.classList.add("border-green-400");
+  warnBox.classList.toggle("hidden", !odFile);
+};
+
+odInput.onchange = () => {
+  odFile = odInput.files[0];
+  odStatus.textContent = odFile ? `Selected: ${odFile.name}` : "No file selected";
+  odCard.classList.add("border-green-400");
+  warnBox.classList.toggle("hidden", !osFile);
+};
+
+
+/* =========================================
+   RUN AI ANALYSIS
+=========================================*/
+runBtn.onclick = async () => {
+
+  if (osFile && odFile) {
+    alert("Upload only one image — OS or OD (not both)");
+    return;
+  }
+
+  const file = osFile || odFile;
+  if (!file) {
+    alert("Please upload at least one image");
+    return;
+  }
+
+  runBtn.textContent = "Running…";
+  runBtn.disabled = true;
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("user_id", userId);
+  form.append("user_email", userEmail);
+  form.append("eye_side", osFile ? "OS" : "OD");
+
+  try {
+    const res = await fetch(API_UPLOAD, { method: "POST", body: form });
+    const data = await res.json();
+
+    console.log("UPLOAD RESULT:", data);
+
+    if (data.detail) {
+      alert("Backend error: " + data.detail);
+      return;
+    }
+
+    /* store image id */
+    currentImageId = data.image_id;
+    resImg.textContent = currentImageId || "—";
+
+    /* show AI result */
+    resLabel.textContent = data.final_label || data.prediction || "Unknown";
+
+    resConf.textContent =
+      ((data.final_confidence || data.confidence) || 0).toFixed(2) + "%";
+
+    gradBtn.href = data.gradcam_signed_url || data.gradcam_url || "#";
+    heatBtn.href = data.heatmap_signed_url || data.heatmap_url || "#";
+
+    resultBox.classList.remove("hidden");
+
+    /* prepare MCQ panel */
+    mcqPanel.classList.remove("hidden");
+    mcqBox.innerHTML = "";
+    submitMcqBtn.classList.add("hidden");
+    finalConfWrap.classList.add("hidden");
+
+  } catch (err) {
+    console.error(err);
+    alert("Server connection failed");
+  }
+
+  runBtn.textContent = "Run AI Analysis";
+  runBtn.disabled = false;
+};
+
+
+/* =========================================
+   LOAD MCQ QUESTIONS
+=========================================*/
+loadMcqBtn.onclick = async () => {
+
+  if (!currentImageId) {
+    alert("Run AI analysis first — no image ID found");
+    return;
+  }
+
+  loadMcqBtn.textContent = "Loading…";
+  loadMcqBtn.disabled = true;
+
+  try {
+    const res = await fetch(`${MCQ_GET}/${currentImageId}`);
+    const data = await res.json();
+
+    console.log("MCQ QUESTIONS:", data);
+
+    if (!data.questions || data.questions.length === 0) {
+      alert("No MCQ questions for this scan");
+      return;
+    }
+
+    mcqBox.innerHTML = "";
+    mcqBox.classList.remove("hidden");
+
+    data.questions.forEach((q, idx) => {
+
+      const block = document.createElement("div");
+      block.className =
+        "p-3 rounded-xl border border-border-dark bg-surface-dark";
+
+      block.innerHTML = `
+        <p class="font-bold mb-1">${idx + 1}. ${q.question}</p>
+
+        ${q.choices.map((opt, i) => `
+          <label class="flex gap-2 mt-1">
+            <input type="radio" name="q${idx}" value="${i}">
+            <span>${opt}</span>
+          </label>
+        `).join("")}
+      `;
+
+      mcqBox.appendChild(block);
+    });
+
+    submitMcqBtn.classList.remove("hidden");
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load questions");
+  }
+
+  loadMcqBtn.textContent = "Load MCQ Questions";
+  loadMcqBtn.disabled = false;
+};
+
+
+/* =========================================
+   SUBMIT MCQ ANSWERS
+=========================================*/
+submitMcqBtn.onclick = async () => {
+
+  const answers = [];
+
+  document.querySelectorAll("#mcqBox > div").forEach((_, idx) => {
+    const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+
+    answers.push({
+      question_index: idx,
+      selected_option_index: selected ? Number(selected.value) : null
+    });
+  });
+
+  if (answers.some(a => a.selected_option_index === null)) {
+    alert("Answer all questions before submitting");
+    return;
+  }
+
+  // 🔐 Get canonical identity
+const userId = localStorage.getItem("user_id");
+const userEmail = localStorage.getItem("user_email");
+
+if (!userId || !userEmail) {
+  alert("Session expired. Please login again.");
+  window.location.href = "/login/code.html";
+  return;
+}
+
+console.log("MCQ SUBMIT PAYLOAD", {
+  image_id: currentImageId,
+  user_id: userId,
+  user_email: userEmail,
+  answers
+});
+
+  submitMcqBtn.textContent = "Submitting…";
+  submitMcqBtn.disabled = true;
+
+  try {
+    const res = await fetch(MCQ_SUBMIT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        image_id: currentImageId,
+        user_id: userId,
+        user_email: userEmail,
+        answers
+})
+    });
+
+    const data = await res.json();
+    console.log("MCQ RESULT:", data);
+
+    finalConfVal.textContent =
+      (data.final_confidence || 0).toFixed(2) + "%";
+
+    finalConfWrap.classList.remove("hidden");
+
+  } catch (err) {
+    console.error(err);
+    alert("Submission failed");
+  }
+
+  submitMcqBtn.textContent = "Submit Answers";
+  submitMcqBtn.disabled = false;
+};
+document.getElementById("backToDashboardBtn").onclick = () => {
+  window.location.href = "../clinician_dashboard/code.html";
+};
+</script>
+
+</body>
+</html>
