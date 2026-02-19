@@ -137,16 +137,14 @@ body { font-family:"Spline Sans",sans-serif; }
           </div>
 
           <div class="bg-slate-100 p-1 rounded-full border border-surface-border flex relative">
-            <input checked class="hidden" id="login-tab" name="auth-tab" type="radio"/>
-            <label class="tab-label flex-1 py-2.5 px-4 rounded-full text-sm font-bold text-text-muted hover:text-medical-blue text-center" for="login-tab">
-              Sign In
-            </label>
+    <div class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold bg-medical-blue text-white text-center shadow-md">
+        Sign In
+    </div>
 
-            <input class="hidden" id="register-tab" name="auth-tab" type="radio"/>
-            <label class="tab-label flex-1 py-2.5 px-4 rounded-full text-sm font-bold text-text-muted hover:text-medical-blue text-center" for="register-tab">
-              Register
-            </label>
-          </div>
+    <a href="../register_page/code.html" class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold text-text-muted hover:text-medical-blue text-center transition-all flex items-center justify-center">
+        Register
+    </a>
+</div>
 
           <!-- LOGIN FORM -->
           <form class="flex flex-col gap-5" id="login-form">
@@ -206,7 +204,7 @@ body { font-family:"Spline Sans",sans-serif; }
   Don’t have an account?
   <a
     href="../register_page/code.html"
-    class="ml-1 font-semibold text-primary hover:text-white transition"
+    class="ml-1 font-semibold text-primary hover:text-medical-blue-soft transition hover:underline"
   >
     Register
   </a>

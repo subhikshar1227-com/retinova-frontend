@@ -144,10 +144,16 @@ body { font-family:"Spline Sans",sans-serif; }
           <input class="hidden" id="login-tab" name="auth-tab" type="radio"/>
           <input class="hidden" id="register-tab" name="auth-tab" type="radio" checked/>
 
-          <div class="bg-slate-100 p-1 rounded-full border border-surface-border flex relative tab-switcher">
-            <label class="tab-label flex-1 py-2.5 px-4 rounded-full text-sm font-bold text-text-muted hover:text-medical-blue text-center" for="login-tab">Sign In</label>
-            <label class="tab-label flex-1 py-2.5 px-4 rounded-full text-sm font-bold text-text-muted hover:text-medical-blue text-center" for="register-tab">Register</label>
-          </div>
+          <div class="bg-slate-100 p-1 rounded-full border border-surface-border flex relative">
+  <a href="../login_page/code.html" 
+     class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold text-text-muted hover:text-medical-blue text-center transition-all flex items-center justify-center">
+    Sign In
+  </a>
+
+  <div class="flex-1 py-2.5 px-4 rounded-full text-sm font-bold bg-medical-blue text-white text-center shadow-md">
+    Register
+  </div>
+</div>
 
           <!-- LOGIN FORM (unchanged) -->
           <form class="hidden flex-col gap-5" id="login-form">
